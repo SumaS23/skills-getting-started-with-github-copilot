@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Clear loading message
       activitiesList.innerHTML = "";
+      activitySelect.length = 1;
 
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
@@ -25,7 +26,38 @@ document.addEventListener("DOMContentLoaded", () => {
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          <div class="participants-section">
+            <h5>Participants</h5>
+            <ul class="participants-list"></ul>
+          </div>
         `;
+
+        const participantsList = activityCard.querySelector(".participants-list");
+        details.participants.forEach((participant) => {
+          const listItem = document.createElement("li");
+          const participantName = document.createElement("span");
+          participantName.textContent = participant;
+
+          const removeButton = document.createElement("button");
+          removeButton.className = "participant-remove";
+          removeButton.type = "button";
+          removeButton.setAttribute("aria-label", `Remove ${participant}`);
+          removeButton.title = "Remove participant";
+          removeButton.innerHTML = "&#128465;";
+          removeButton.addEventListener("click", async () => {
+            const response = await fetch(
+              `/activities/${encodeURIComponent(name)}/participants?email=${encodeURIComponent(participant)}`,
+              { method: "DELETE" }
+            );
+
+            if (response.ok) {
+              await fetchActivities();
+            }
+          });
+
+          listItem.append(participantName, removeButton);
+          participantsList.appendChild(listItem);
+        });
 
         activitiesList.appendChild(activityCard);
 
