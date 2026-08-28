@@ -38,6 +38,42 @@ activities = {
         "schedule": "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
         "max_participants": 30,
         "participants": ["john@mergington.edu", "olivia@mergington.edu"]
+    },
+    "Basketball League": {
+        "description": "Competitive basketball team and league matches",
+        "schedule": "Tuesdays and Thursdays, 4:00 PM - 5:30 PM",
+        "max_participants": 15,
+        "participants": []
+    },
+    "Tennis Club": {
+        "description": "Tennis lessons and friendly matches",
+        "schedule": "Saturdays, 10:00 AM - 11:30 AM",
+        "max_participants": 8,
+        "participants": []
+    },
+    "Painting Studio": {
+        "description": "Oil and acrylic painting techniques and creative expression",
+        "schedule": "Wednesdays, 4:00 PM - 5:30 PM",
+        "max_participants": 15,
+        "participants": []
+    },
+    "Drama Club": {
+        "description": "Theater performance and scriptwriting workshops",
+        "schedule": "Mondays, 4:00 PM - 5:30 PM",
+        "max_participants": 20,
+        "participants": []
+    },
+    "Debate Team": {
+        "description": "Competitive debate and public speaking skills",
+        "schedule": "Thursdays, 5:00 PM - 6:30 PM",
+        "max_participants": 10,
+        "participants": []
+    },
+    "Philosophy Forum": {
+        "description": "Explore philosophical ideas and critical thinking discussions",
+        "schedule": "Mondays, 5:30 PM - 7:00 PM",
+        "max_participants": 25,
+        "participants": []
     }
 }
 
@@ -61,7 +97,12 @@ def signup_for_activity(activity_name: str, email: str):
 
     # Get the specific activity
     activity = activities[activity_name]
+    
+    # Validate student is not already signed up
+    if email in activity["participants"]:
+        raise HTTPException(status_code=400, detail="Student is already signed up for this activity")
 
     # Add student
+   
     activity["participants"].append(email)
     return {"message": f"Signed up {email} for {activity_name}"}
